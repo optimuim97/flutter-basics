@@ -1,59 +1,123 @@
 import 'package:flutter/material.dart';
 import 'home.dart';
+import 'settings.dart';
 import 'person.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(MyApp());
+}
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
 
   @override
   _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  @override
   int index = 0;
-  List<Widget> list = [Home(), Person()];
 
+  List<Widget> list = [Home(), Person(), Settings()];
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: list[index],
         appBar: AppBar(
-          title: Text('FAB'),
+          title: Text('Drawer'),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          child: Icon(Icons.add),
+        body: list[index],
+        drawer: MyDrawer(
+          onTap: (ctx, i) {
+            setState(() {
+              index = i;
+              Navigator.pop(ctx);
+            });
+          },
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        bottomNavigationBar: BottomAppBar(
-          shape: CircularNotchedRectangle(),
-          clipBehavior: Clip.antiAlias,
-          notchMargin: 10,
-          child: BottomNavigationBar(
-            currentIndex: index,
-            onTap: (value) {
-              setState(() => index = value);
-              print("${value}=======>");
-            },
-            items: [
-              BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.home,
-                    color: index == 0 ? Colors.blue : Colors.grey,
-                  ),
-                  title: SizedBox.shrink()),
-              BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.person,
-                    color: index == 1 ? Colors.blue : Colors.grey,
-                  ),
-                  title: SizedBox.shrink()),
-            ],
-          ),
+      ),
+    );
+  }
+}
+
+class MyDrawer extends StatelessWidget {
+  final Function onTap;
+
+  MyDrawer({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: Drawer(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(color: Colors.blue),
+              child: Padding(
+                padding: EdgeInsets.all(6),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Container(
+                      width: 60,
+                      height: 60,
+                      child: CircleAvatar(
+                        backgroundImage: AssetImage('images/img.png'),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 9.0,
+                    ),
+                    Text('As Sidik Ouattara',
+                        style: TextStyle(color: Colors.white, fontSize: 20.0)),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      'assidikouattara@gmail.com',
+                      style: TextStyle(color: Colors.white, fontSize: 12.0),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.home),
+              title: Text('Home'),
+              onTap: () => onTap(context, 0),
+            ),
+            Divider(
+              height: 3.0,
+            ),
+            ListTile(
+              leading: Icon(Icons.person),
+              title: Text('Profile'),
+              onTap: () => onTap(context, 1),
+            ),
+            Divider(
+              height: 3.0,
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Settings'),
+              onTap: () => onTap(context, 2),
+            ),
+            Divider(
+              height: 3.0,
+            ),
+            ListTile(
+              leading: Icon(Icons.logout),
+              title: Text('Logout'),
+              onTap: () => onTap(context, 3),
+            ),
+            Divider(
+              height: 3.0,
+            ),
+          ],
         ),
       ),
     );
